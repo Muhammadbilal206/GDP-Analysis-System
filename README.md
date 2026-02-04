@@ -14,7 +14,8 @@ CONFIGURATION>JSON CHANGES:
 
 
 DATA_LOADER.PY CHANGES:
--Modified data_loader.py file and added the json loader function.
+- Added the json loader function.
+- Added the csv loader function to load the data from .csv file
 
 
 
