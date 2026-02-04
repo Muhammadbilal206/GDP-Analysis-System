@@ -25,3 +25,6 @@ DATA_PROCESSOR.PY CHANGES:
 
 
 DASHBOARD.PY CHANGES:
+- Added the plotting function for bar chart
+- Added the plotting function for line chart
+- Added execution function for the main as well
