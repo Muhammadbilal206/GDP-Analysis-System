@@ -2,7 +2,7 @@
 {
   "file_path": "gdp_with_continent_filled.csv",
   "region": "Europe",
-  "country": 2020,
+  "year": 2020,
   "operation": "average",
   "output": "dashboard"
 }
