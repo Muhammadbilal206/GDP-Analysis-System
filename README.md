@@ -20,8 +20,8 @@ DATA_LOADER.PY CHANGES:
 
 
 DATA_PROCESSOR.PY CHANGES:
+- Added function to preocess data according to the configuration file
 
 
 
-
-DASHBOARD>PY CHANGES:
+DASHBOARD.PY CHANGES:
