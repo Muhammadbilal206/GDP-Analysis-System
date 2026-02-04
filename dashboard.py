@@ -1,30 +1,96 @@
-
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import numpy as np
 import data_loader
 import data_processor
 
-def bar_chart(x_data, y_data, title, x_label, y_label):
-    plt.figure(figsize=(14, 8))
-    plt.bar(x_data, y_data, color='skyblue')
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.xticks(rotation=90)
+try:
+    plt.style.use('ggplot') 
+except:
+    pass
+
+def bar_chart(labels, values, title, x_label, y_label):
+    plt.figure(figsize=(12, 10))
+    
+    colors = cm.tab20(np.linspace(0, 1, len(labels)))
+    
+    bars = plt.barh(labels, values, color='none', edgecolor=colors, linewidth=3, height=0.7)
+    
+    plt.title(title, fontsize=16, fontweight='bold', pad=20)
+    plt.xlabel(y_label, fontsize=12)
+    plt.ylabel(x_label, fontsize=12)
+    plt.gca().invert_yaxis()
+    plt.grid(axis='x', linestyle='--', alpha=0.3)
+    
+    ytick_labels = plt.gca().get_yticklabels()
+    for label, color in zip(ytick_labels, colors):
+        label.set_color(color)
+        label.set_fontweight('bold')
+        label.set_fontsize(11)
+
+    for bar, color in zip(bars, colors):
+        width = bar.get_width()
+        plt.text(width * 1.02, bar.get_y() + bar.get_height()/2, 
+                 f'{width:,.1f}', 
+                 va='center', ha='left', fontsize=11, fontweight='bold', color=color)
+
+    plt.tight_layout()
+    plt.show()
+
+def pie_chart(labels, values, title):
+    plt.figure(figsize=(12, 12))
+    
+    colors = cm.tab20(np.linspace(0, 1, len(values)))
+    
+    wedges, texts, autotexts = plt.pie(values, labels=labels, autopct='%1.1f%%', 
+                                       startangle=140, colors=colors,
+                                       pctdistance=0.85, labeldistance=1.1,
+                                       wedgeprops={'linewidth': 2, 'edgecolor': 'white'})
+    
+    for text, color in zip(texts, colors):
+        text.set_color(color)
+        text.set_fontweight('bold')
+        text.set_fontsize(11)
+
+    for autotext, color in zip(autotexts, colors):
+        autotext.set_color('white') 
+        autotext.set_fontweight('bold')
+        autotext.set_fontsize(10)
+        autotext.set_path_effects([plt.matplotlib.patheffects.withStroke(linewidth=3, foreground=color)])
+            
+    plt.title(title, fontsize=16, fontweight='bold', pad=20)
     plt.tight_layout()
     plt.show()
 
 def line_chart(x_data, y_data, title, x_label, y_label):
-    plt.figure(figsize=(10, 6))
-    plt.plot(x_data, y_data, marker='o', linestyle='-', color='green')
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.grid(True)
+    plt.figure(figsize=(12, 7))
+    plt.plot(x_data, y_data, marker='o', linestyle='-', linewidth=2, color='#d62728', label='GDP')
+    plt.fill_between(x_data, y_data, color='#d62728', alpha=0.1)
+    
+    plt.title(title, fontsize=16, fontweight='bold', pad=20)
+    plt.xlabel(x_label, fontsize=12)
+    plt.ylabel(y_label, fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.ticklabel_format(style='plain', axis='y')
+    plt.tight_layout()
+    plt.show()
+
+def scatter_chart(x_data, y_data, title, x_label, y_label):
+    plt.figure(figsize=(12, 7))
+    plt.scatter(x_data, y_data, color='#d62728', s=100, alpha=0.8, edgecolors='black', label='GDP Data Points')
+    
+    plt.title(title, fontsize=16, fontweight='bold', pad=20)
+    plt.xlabel(x_label, fontsize=12)
+    plt.ylabel(y_label, fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.ticklabel_format(style='plain', axis='y')
+    plt.legend()
+    plt.tight_layout()
     plt.show()
 
 def dashboard(data, config):
     stat_result = data_processor.process_data(data, config)
-    print(f"Computed Result ({config.get('operation')}): {stat_result}")
+    print(f"Computed Result ({config.get('operation')}): {stat_result / 1_000_000_000:,.2f} Billion")
 
     plot_data = data_processor.get_filtered_data_for_plot(data, config)
 
@@ -32,30 +98,52 @@ def dashboard(data, config):
         print("No data found for the selected configuration.")
         return
 
+    scale_factor = 1_000_000_000
+
     if config.get("year"):
-        labels = [row['Country Name'] for row in plot_data]
-        values = [row['Value'] for row in plot_data]
+        year_data = [row for row in plot_data if row['Year'] == config['year']]
+        year_data.sort(key=lambda x: x['Value'], reverse=True)
         
-        print(f"Generating Bar Chart for Year: {config['year']}")
-        bar_chart(labels, values, f"GDP in {config['year']}", "Country", "GDP")
+        top_n = 15
+        year_data = year_data[:top_n]
+
+        labels = [row['Country Name'] for row in year_data]
+        values = [row['Value'] / scale_factor for row in year_data]
         
+        region_title = config.get("region", "Global")
+        
+        plot_type = config.get("plot_type", "bar").lower()
+        
+        if plot_type == "pie":
+            print(f"Generating Pie Chart for {region_title} in {config['year']}")
+            pie_chart(labels, values, f"GDP Distribution - {region_title} ({config['year']})")
+        else:
+            print(f"Generating Bar Chart for {region_title} in {config['year']}")
+            bar_chart(labels, values, f"GDP Ranking - {region_title} ({config['year']})", "Country", "GDP (Billions USD)")
+
     elif config.get("country"):
-        labels = [row['Year'] for row in plot_data]
-        values = [row['Value'] for row in plot_data]
+        plot_data.sort(key=lambda x: x['Year'])
         
-        print(f"Generating Line Chart for Country: {config['country']}")
-        line_chart(labels, values, f"GDP Trend for {config['country']}", "Year", "GDP")
+        labels = [row['Year'] for row in plot_data]
+        values = [row['Value'] / scale_factor for row in plot_data]
+        
+        plot_type = config.get("plot_type", "line").lower()
+        
+        if plot_type == "scatter":
+            print(f"Generating Scatter Chart for Country: {config['country']}")
+            scatter_chart(labels, values, f"GDP Scatter Analysis for {config['country']}", "Year", "GDP (Billions USD)")
+        else:
+            print(f"Generating Line Chart for Country: {config['country']}")
+            line_chart(labels, values, f"GDP Trend for {config['country']}", "Year", "GDP (Billions USD)")
         
     else:
         print("Config not specific enough. Please specify a 'year' or 'country'.")
 
 if __name__ == "__main__":
     config = data_loader.load_config("config.json")
-    
     if config:
         file_path = config.get("file_path", "gdp_with_continent_filled.csv")
         raw_data = data_loader.load_data(file_path)
-        
         if raw_data:
             dashboard(raw_data, config)
         else:
