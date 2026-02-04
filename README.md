@@ -14,13 +14,14 @@ CONFIGURATION>JSON CHANGES:
 
 
 DATA_LOADER.PY CHANGES:
--Modified data_loader.py file and added the json loader function.
+- Added the json loader function.
+- Added the csv loader function to load the data from .csv file
 
 
 
 DATA_PROCESSOR.PY CHANGES:
+- Added function to preocess data according to the configuration file
 
 
 
-
-DASHBOARD>PY CHANGES:
+DASHBOARD.PY CHANGES:
