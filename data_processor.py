@@ -20,6 +20,14 @@ def process_data(data, config):
         return sum(gdp_values)
     elif operation == "average":
         return sum(gdp_values) / len(gdp_values)
+
+ def get_filtered_data_for_plot(data, config):
+    filter_condition = lambda row: (
+        (not config.get("country") or row["Country Name"] == config["country"]) and
+        (not config.get("region") or row["Region"] == config["region"])
+    )
+    
+    return list(filter(filter_condition, data))
         
     return 0
 

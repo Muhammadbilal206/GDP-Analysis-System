@@ -21,7 +21,7 @@ DATA_LOADER.PY CHANGES:
 
 DATA_PROCESSOR.PY CHANGES:
 - Added function to preocess data according to the configuration file
-
+- Added function to get filtyered data for plotting in charts
 
 
 DASHBOARD.PY CHANGES:
