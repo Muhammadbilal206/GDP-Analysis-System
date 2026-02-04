@@ -1,16 +1,33 @@
-#for bar chart
+//for bar chart
 {
   "file_path": "gdp_with_continent_filled.csv",
-  "region": "Europe",
-  "country": 2020,
+  "region": "Asia",
+  "year": 2020,
   "operation": "average",
-  "output": "dashboard"
+  "plot_type": "bar"
 }
 
-#for line chart
+//for pie chart
 {
   "file_path": "gdp_with_continent_filled.csv",
-  "country": "Pakistan",
+  "region": "Asia",
+  "year": 2020,
   "operation": "average",
-  "output": "dashboard"
+  "plot_type": "pie"
+}
+
+//for line chart
+{
+  "file_path": "gdp_with_continent_filled.csv",
+  "country": "China",
+  "operation": "average",
+  "plot_type": "line"
+}
+
+//for scatter chart
+{
+  "file_path": "gdp_with_continent_filled.csv",
+  "country": "China",
+  "operation": "average",
+  "plot_type": "scatter"
 }
