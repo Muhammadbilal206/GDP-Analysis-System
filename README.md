@@ -8,9 +8,9 @@ Added data_processor.py file
 Added dashboard.py file
 Added config.json file
 
-CONFIGURATION>JSON CHANGES:
+CONFIGURATION.JSON CHANGES:
 
--Modified config.json file and added configuration settings.
+- Modified config.json file and added configuration settings.
 
 
 DATA_LOADER.PY CHANGES:
