@@ -9,16 +9,22 @@ try:
 except:
     pass
 
+def get_strong_colors(n):
+    cmap1 = cm.get_cmap('tab10', 10)
+    cmap2 = cm.get_cmap('Dark2', 8)
+    colors = [cmap1(i) for i in range(10)] + [cmap2(i) for i in range(8)]
+    return colors[:n]
+
 def bar_chart(labels, values, title, x_label, y_label):
-    plt.figure(figsize=(12, 10))
+    plt.figure(figsize=(13, 11))
     
-    colors = cm.tab20(np.linspace(0, 1, len(labels)))
+    colors = get_strong_colors(len(labels))
     
     bars = plt.barh(labels, values, color='none', edgecolor=colors, linewidth=3, height=0.7)
     
-    plt.title(title, fontsize=16, fontweight='bold', pad=20)
-    plt.xlabel(y_label, fontsize=12)
-    plt.ylabel(x_label, fontsize=12)
+    plt.title(title, fontsize=16, fontweight='bold', pad=20, color = 'red')
+    plt.xlabel(y_label, fontsize=12, fontweight='bold')
+    plt.ylabel(x_label, fontsize=12, fontweight='bold')
     plt.gca().invert_yaxis()
     plt.grid(axis='x', linestyle='--', alpha=0.3)
     
@@ -26,11 +32,11 @@ def bar_chart(labels, values, title, x_label, y_label):
     for label, color in zip(ytick_labels, colors):
         label.set_color(color)
         label.set_fontweight('bold')
-        label.set_fontsize(11)
+        label.set_fontsize(12)
 
     for bar, color in zip(bars, colors):
         width = bar.get_width()
-        plt.text(width * 1.02, bar.get_y() + bar.get_height()/2, 
+        plt.text(width * 1.01, bar.get_y() + bar.get_height()/2, 
                  f'{width:,.1f}', 
                  va='center', ha='left', fontsize=11, fontweight='bold', color=color)
 
@@ -38,38 +44,37 @@ def bar_chart(labels, values, title, x_label, y_label):
     plt.show()
 
 def pie_chart(labels, values, title):
-    plt.figure(figsize=(12, 12))
+    plt.figure(figsize=(15, 15))
     
-    colors = cm.tab20(np.linspace(0, 1, len(values)))
+    colors = get_strong_colors(len(values))
     
     wedges, texts, autotexts = plt.pie(values, labels=labels, autopct='%1.1f%%', 
-                                       startangle=140, colors=colors,
-                                       pctdistance=0.85, labeldistance=1.1,
+                                       startangle=180, colors=colors,
+                                       pctdistance=1.1, labeldistance=1.25,
                                        wedgeprops={'linewidth': 2, 'edgecolor': 'white'})
     
     for text, color in zip(texts, colors):
         text.set_color(color)
         text.set_fontweight('bold')
-        text.set_fontsize(11)
+        text.set_fontsize(12)
 
     for autotext, color in zip(autotexts, colors):
-        autotext.set_color('white') 
+        autotext.set_color(color) 
         autotext.set_fontweight('bold')
-        autotext.set_fontsize(10)
-        autotext.set_path_effects([plt.matplotlib.patheffects.withStroke(linewidth=3, foreground=color)])
+        autotext.set_fontsize(11)
             
-    plt.title(title, fontsize=16, fontweight='bold', pad=20)
+    plt.title(title, fontsize=16, fontweight='bold', pad=50, color = 'red')
     plt.tight_layout()
     plt.show()
 
 def line_chart(x_data, y_data, title, x_label, y_label):
     plt.figure(figsize=(12, 7))
-    plt.plot(x_data, y_data, marker='o', linestyle='-', linewidth=2, color='#d62728', label='GDP')
+    plt.plot(x_data, y_data, marker='o', linestyle='-', linewidth=3, color='#d62728', label='GDP')
     plt.fill_between(x_data, y_data, color='#d62728', alpha=0.1)
     
     plt.title(title, fontsize=16, fontweight='bold', pad=20)
-    plt.xlabel(x_label, fontsize=12)
-    plt.ylabel(y_label, fontsize=12)
+    plt.xlabel(x_label, fontsize=12, fontweight='bold')
+    plt.ylabel(y_label, fontsize=12, fontweight='bold')
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.ticklabel_format(style='plain', axis='y')
     plt.tight_layout()
@@ -77,11 +82,11 @@ def line_chart(x_data, y_data, title, x_label, y_label):
 
 def scatter_chart(x_data, y_data, title, x_label, y_label):
     plt.figure(figsize=(12, 7))
-    plt.scatter(x_data, y_data, color='#d62728', s=100, alpha=0.8, edgecolors='black', label='GDP Data Points')
+    plt.scatter(x_data, y_data, color='#d62728', s=150, alpha=0.9, edgecolors='black', linewidth=1.5, label='GDP Data Points')
     
     plt.title(title, fontsize=16, fontweight='bold', pad=20)
-    plt.xlabel(x_label, fontsize=12)
-    plt.ylabel(y_label, fontsize=12)
+    plt.xlabel(x_label, fontsize=12, fontweight='bold')
+    plt.ylabel(y_label, fontsize=12, fontweight='bold')
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.ticklabel_format(style='plain', axis='y')
     plt.legend()
